@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UIUC Schedule Finder</title>
+    <script type="module" crossorigin src="./assets/index-Cp5L0N5z.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BqoCKiwF.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>UIUC Schedule Finder</h1>
+        <p class="subtitle">Spring 2027 · Enter the courses you plan to take and get a weekly schedule with no time conflicts.</p>
+      </header>
+
+      <form id="course-form" class="course-form">
+        <div class="field">
+          <label for="course-input">Courses</label>
+          <input
+            id="course-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="CS 128, CS 173, MATH 257"
+            aria-describedby="course-hint"
+          />
+          <p id="course-hint" class="hint">Separate courses with commas.</p>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="major-input">Your major <span class="optional">(optional)</span></label>
+            <div class="suggestion-field">
+              <input
+                id="major-input"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Start typing, like Linguistics"
+                aria-describedby="major-hint"
+              />
+              <ul id="major-options" class="suggestion-list" aria-label="Majors"></ul>
+            </div>
+            <p id="major-hint" class="hint">Pick from the list; Course Explorer abbreviates some names.</p>
+          </div>
+          <div class="field">
+            <label for="standing-select">Class standing <span class="optional">(optional)</span></label>
+            <select id="standing-select" aria-describedby="standing-hint">
+              <option value="">Not set</option>
+            </select>
+            <p id="standing-hint" class="hint">Your standing in Spring 2027.</p>
+          </div>
+        </div>
+
+        <fieldset class="time-rules">
+          <legend>Time preferences <span class="optional">(optional)</span></legend>
+          <p class="hint">
+            Rules higher in the list win when they can't all be met. A hard limit is never broken; a preference is
+            met whenever possible.
+          </p>
+          <ol id="time-rules" class="rule-list"></ol>
+          <button id="add-rule-button" class="secondary-button" type="button">Add time rule</button>
+        </fieldset>
+
+        <button id="find-button" class="primary-button" type="submit">Find a schedule</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite" hidden></p>
+      <section id="results" aria-label="Schedule"></section>
+    </main>
+  </body>
+</html>
