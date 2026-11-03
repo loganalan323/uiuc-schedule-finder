@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UIUC Schedule Finder</title>
-    <script type="module" crossorigin src="./assets/index-Dig5qZv6.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CvdyqwKM.css">
+    <script type="module" crossorigin src="./assets/index-byO0f8BN.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DiKgeRxs.css">
   </head>
   <body>
     <main>
@@ -30,6 +30,7 @@
 
         <div id="class-choices" class="course-choices" hidden></div>
         <div id="format-choices" class="course-choices" hidden></div>
+        <div id="program-choices" class="course-choices" hidden></div>
 
         <div class="field-row">
           <div class="field">
@@ -53,6 +54,20 @@
               <option value="">Not set</option>
             </select>
             <p id="standing-hint" class="hint">Your standing in Spring 2027.</p>
+          </div>
+          <div class="field">
+            <label id="programs-label" for="programs-button">Special programs <span class="optional">(optional)</span></label>
+            <button
+              id="programs-button"
+              class="dropdown-button"
+              type="button"
+              aria-expanded="false"
+              aria-controls="program-options"
+              aria-labelledby="programs-label programs-button"
+              aria-describedby="programs-hint"
+            ></button>
+            <div id="program-options" class="program-options" role="group" aria-labelledby="programs-label" hidden></div>
+            <p id="programs-hint" class="hint">Honors and Merit sections are left out unless you're in the program.</p>
           </div>
         </div>
 
