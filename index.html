@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UIUC Schedule Finder</title>
-    <script type="module" crossorigin src="./assets/index-BHbeacuh.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-QY8czJOm.css">
+    <script type="module" crossorigin src="./assets/index-CkZQ2Qqm.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-W277xlm0.css">
   </head>
   <body>
     <main>
@@ -15,10 +15,49 @@
       </header>
 
       <form id="course-form" class="course-form">
+        <div id="people-tabs" class="people-tabs" role="tablist" aria-label="Whose courses and rules to edit" hidden></div>
+        <div id="people" class="people"></div>
+
+        <div class="add-person">
+          <button id="add-person-button" class="secondary-button" type="button">Add a friend</button>
+          <p id="add-person-hint" class="hint">
+            Planning with friends? Add each friend's courses and rules to find schedules with the most classes together.
+          </p>
+        </div>
+
+        <button id="find-button" class="primary-button" type="submit">Find a schedule</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite" hidden></p>
+      <!-- Says when a search ran out of time, with a button to keep looking in the background. -->
+      <div id="search-note" class="search-note" hidden>
+        <p role="status" aria-live="polite">
+          <span id="search-note-text"></span>
+          <!-- A clock that ticks every second, so it is kept from screen readers, which hear the notes before and after. -->
+          <span id="search-note-time" class="muted" aria-hidden="true"></span>
+        </p>
+        <button id="search-note-button" class="secondary-button" type="button"></button>
+      </div>
+      <section id="results" aria-label="Schedule"></section>
+    </main>
+
+    <!-- One person's fields. The page makes a copy for each person and adds the person's number to every id. -->
+    <template id="person-template">
+      <div class="person-panel">
+        <div class="field" data-part="name-field" hidden>
+          <label for="person-name">Friend's name</label>
+          <div class="name-row">
+            <input id="person-name" data-part="name-input" type="text" autocomplete="off" aria-describedby="person-name-hint" />
+            <button class="secondary-button" data-part="remove-button" type="button">Remove</button>
+          </div>
+          <p id="person-name-hint" class="hint">Shown on the tab above and in the results.</p>
+        </div>
+
         <div class="field">
           <label for="course-input">Courses</label>
           <input
             id="course-input"
+            data-part="course-input"
             type="text"
             autocomplete="off"
             spellcheck="false"
@@ -28,37 +67,39 @@
           <p id="course-hint" class="hint">Separate courses with commas.</p>
         </div>
 
-        <div id="class-choices" class="course-choices" hidden></div>
-        <div id="format-choices" class="course-choices" hidden></div>
-        <div id="program-choices" class="course-choices" hidden></div>
+        <div data-part="class-choices" class="course-choices" hidden></div>
+        <div data-part="format-choices" class="course-choices" hidden></div>
+        <div data-part="program-choices" class="course-choices" hidden></div>
 
         <div class="field-row">
           <div class="field">
-            <label for="major-input">Your major <span class="optional">(optional)</span></label>
+            <label for="major-input">Major <span class="optional">(optional)</span></label>
             <div class="suggestion-field">
               <input
                 id="major-input"
+                data-part="major-input"
                 type="text"
                 autocomplete="off"
                 spellcheck="false"
                 placeholder="Start typing, like Linguistics"
                 aria-describedby="major-hint"
               />
-              <ul id="major-options" class="suggestion-list" aria-label="Majors"></ul>
+              <ul id="major-options" data-part="major-options" class="suggestion-list" aria-label="Majors"></ul>
             </div>
-            <p id="major-hint" class="hint">Pick from the list; Course Explorer abbreviates some names.</p>
+            <p id="major-hint" data-part="major-hint" class="hint">Pick from the list; Course Explorer abbreviates some names.</p>
           </div>
           <div class="field">
             <label for="standing-select">Class standing <span class="optional">(optional)</span></label>
-            <select id="standing-select" aria-describedby="standing-hint">
+            <select id="standing-select" data-part="standing-select" aria-describedby="standing-hint">
               <option value="">Not set</option>
             </select>
-            <p id="standing-hint" class="hint">Your standing in Spring 2027.</p>
+            <p id="standing-hint" class="hint">Standing in Spring 2027.</p>
           </div>
           <div class="field">
             <label id="programs-label" for="programs-button">Special programs <span class="optional">(optional)</span></label>
             <button
               id="programs-button"
+              data-part="programs-button"
               class="dropdown-button"
               type="button"
               aria-expanded="false"
@@ -66,8 +107,8 @@
               aria-labelledby="programs-label programs-button"
               aria-describedby="programs-hint"
             ></button>
-            <div id="program-options" class="program-options" role="group" aria-labelledby="programs-label" hidden></div>
-            <p id="programs-hint" class="hint">Honors and Merit sections are left out unless you're in the program.</p>
+            <div id="program-options" data-part="program-options" class="program-options" role="group" aria-labelledby="programs-label" hidden></div>
+            <p id="programs-hint" class="hint">Honors and Merit sections are left out unless the student is in the program.</p>
           </div>
         </div>
 
@@ -77,15 +118,10 @@
             Add rules like “no classes before 10.” Rules higher in the list win when they conflict. Required rules are
             never broken; preferred rules bend only when they have to.
           </p>
-          <ol id="time-rules" class="rule-list"></ol>
-          <button id="add-rule-button" class="secondary-button" type="button">Add a rule</button>
+          <ol data-part="time-rules" class="rule-list"></ol>
+          <button data-part="add-rule-button" class="secondary-button" type="button">Add a rule</button>
         </fieldset>
-
-        <button id="find-button" class="primary-button" type="submit">Find a schedule</button>
-      </form>
-
-      <p id="status" role="status" aria-live="polite" hidden></p>
-      <section id="results" aria-label="Schedule"></section>
-    </main>
+      </div>
+    </template>
   </body>
 </html>
